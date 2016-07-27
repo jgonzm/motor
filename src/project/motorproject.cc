@@ -398,12 +398,13 @@ void motorproject::writemakefunc() {
     string tname, fname;
     pparamslist *p;
 
-    fname = getrootdir() + "/Makefile.func";
+    string makefile = "/CMakeLists.txt"; // "/Makefile.func";
+    fname = getrootdir() + makefile;
 
     if(f = fopen(fname.c_str(), "w")) {
 	p = pparamslist_create();
 	populateparselist(p);
-	tname = conf.gettemplatedir(gettemplatename()) + "/Makefile.func";
+	tname = conf.gettemplatedir(gettemplatename()) + makefile;
 	strparse(tname.c_str(), tname.size(), p, f, PARSER_SRC_FILE, PARSER_FLOAD_MMAP);
 	if(vcs.enabled())
 	    if(getname() == project.getname())

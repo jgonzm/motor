@@ -25,6 +25,7 @@
 // #define SHARE_DIR   "/usr/local/share/motor/"
 #define VERSION     "0.0.0"
 #define GNUMAKE     "make"
+#define CMAKE       "cmake"
 
 #endif
 
@@ -37,8 +38,8 @@
 
 #ifdef __MOTOR_USE_NAMESPACES
 
-#define __MOTOR_BEGIN_NAMESPACE		namespace motor {
-#define __MOTOR_END_NAMESPACE		}
+#define __MOTOR_BEGIN_NAMESPACE         namespace motor {
+#define __MOTOR_END_NAMESPACE           }
 
 using namespace std;
 

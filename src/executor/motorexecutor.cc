@@ -24,7 +24,7 @@ void motorexecutor::piperead() {
     lastmessages.clear();
 
     while(!feof(fpipe)) {
-        cbuf[0] = 0;
+	cbuf[0] = 0;
 	fgets(cbuf, 512, fpipe);
 	lastbuf += cbuf;
 
@@ -43,7 +43,7 @@ void motorexecutor::piperead() {
 		case parserule::info: ninfo++; break;
 	    }
 
-            lastmessages.push_back(msg);
+	    lastmessages.push_back(msg);
 	}
     }
 }
@@ -59,33 +59,42 @@ bool motorexecutor::runmake(const string &atarget) {
 
     if(rc = !pipe(cp)) {
 	if(!(cpid = fork())) {
-            dup2(cp[1], STDOUT_FILENO);
-            dup2(cp[1], STDERR_FILENO);
-            close(cp[1]);
+	    dup2(cp[1], STDOUT_FILENO);
+	    dup2(cp[1], STDERR_FILENO);
+	    close(cp[1]);
 	    close(cp[0]);
 
 	    pop();
 
-	    execl(findprogram(GNUMAKE).c_str(), GNUMAKE,
-		"-f", "Makefile.func",
-		target.c_str(), 0);
+	    if (target != "start" && target != "update") {
+		chdir("build");
+		string makefile = "Makefile";
+		execl(findprogram(GNUMAKE).c_str(), GNUMAKE,
+		    "-f", makefile.c_str(),
+		    target.c_str(), 0);
+	    } else {
+		mkdir("build", S_IRWXU | S_IRWXG | S_IRWXO);
+		chdir("build");
+		execl(findprogram(CMAKE).c_str(), CMAKE,
+		    "..", 0);
+	    }
+	    
+	    _exit(0);
+	} else {
+	    close(cp[1]);
 
-            _exit(0);
-        } else {
-            close(cp[1]);
-
-            if(rc = (fpipe = fdopen(cp[0], "r"))) {
+	    if(rc = (fpipe = fdopen(cp[0], "r"))) {
 		piperead();
 		fclose(fpipe);
-        	close(cp[0]);
+		close(cp[0]);
 	    }
 
-            waitpid(cpid, 0, 0);
+	    waitpid(cpid, 0, 0);
 
 	    ui.doneoutput();
 	    ui.executordone(target, nerr, nwarn, ninfo);
 
-    	    rc = !nerr;
+	    rc = !nerr;
 	}
     }
 
