@@ -20,11 +20,11 @@
 
 ncursesui thisui;
 
-#define LOOKER_HEIGHT		(LINES-2)
-#define OUTLINES_LIMIT		512
-#define NULL_CONST_STR		((const char *) 0)
+#define LOOKER_HEIGHT           (LINES-2)
+#define OUTLINES_LIMIT          512
+#define NULL_CONST_STR          ((const char *) 0)
 
-#define getcolor(c)	uiconf.getcolor(c)
+#define getcolor(c)     uiconf.getcolor(c)
 
 ncursesui::ncursesui(): terminate(false), outopen(false) {
 }
@@ -65,11 +65,11 @@ void ncursesui::execute(INT argc, char **argv) {
     if(project.empty()) pload();
 
     if(!project.empty()) {
-        initmenubar();
+	initmenubar();
 
 	do {
 	    mainloop();
-            terminate = project.close();
+	    terminate = project.close();
 	} while(!terminate);
     }
 
@@ -86,16 +86,16 @@ void ncursesui::pload(const projectname pname) {
 	    nname = selectproject(selectorcreate);
 	}
 
-        if(!(fin = nname.empty())) {
-            np = motorproject(nname);
+	if(!(fin = nname.empty())) {
+	    np = motorproject(nname);
 
-            if(!np.empty())
-               if(project.close()) {
-                   project = motorproject(static_cast<projectname> (np));
-                   onprojectload();
-                   fin = true;
-               }
-        }
+	    if(!np.empty())
+	       if(project.close()) {
+		   project = motorproject(static_cast<projectname> (np));
+		   onprojectload();
+		   fin = true;
+	       }
+	}
 
 	nname = projectname();
     }
@@ -115,26 +115,26 @@ motorui::askresult ncursesui::ask(const string &answersallowed, const string &te
 
     msg = text + " (";
     for(c = answersallowed.begin(); c != answersallowed.end(); c++) {
-        msg += c != answersallowed.begin() ? tolower(*c) : toupper(*c);
-        if(c != answersallowed.end()-1) msg += '/';
+	msg += c != answersallowed.begin() ? tolower(*c) : toupper(*c);
+	if(c != answersallowed.end()-1) msg += '/';
     }
 
     msg += ") ";
     kwriteat(0, line, msg.c_str(), getcolor(cp_input));
 
     while(1) {
-        key = toupper(getch());
-        if(key == '\r') key = toupper(*answersallowed.begin());
-        if(answersallowed.find(key) != -1) break;
+	key = toupper(getch());
+	if(key == '\r') key = toupper(*answersallowed.begin());
+	if(answersallowed.find(key) != -1) break;
     }
 
     sarea.restore();
 
     switch(key) {
-        case 'Y': return motorui::yes;
-        case 'C': return motorui::cancel;
-        case 'A': return motorui::all;
-        case 'N': return motorui::no;
+	case 'Y': return motorui::yes;
+	case 'C': return motorui::cancel;
+	case 'A': return motorui::all;
+	case 'N': return motorui::no;
     }
 
     return motorui::no;
@@ -188,22 +188,22 @@ void ncursesui::loadeditfile(const motorui::editfile ef, INT options) {
 	fname = justfname(fname);
 
 	for(ifold = project.foldbegin(), found = false; !found && ifold != project.foldend(); ifold++)
-    	for(ifile = ifold->begin(); !found && ifile != ifold->end(); ifile++)
+	for(ifile = ifold->begin(); !found && ifile != ifold->end(); ifile++)
 	    switch(ifold->getcontentkind()) {
 		case motorfile::source:
 		    if(found = (justfname(ifile->getfname()) == fname))
-		        fname = project.transformfname(projectpaths::absolute, ifile->getfname());
+			fname = project.transformfname(projectpaths::absolute, ifile->getfname());
 		    break;
 
 		case motorfile::project:
 		    pf = motorproject(ifile->getfname());
 
 		    for(icfold = pf.foldbegin(); !found && icfold != pf.foldend(); icfold++) {
-		        if(icfold->getcontentkind() == motorfile::source) {
+			if(icfold->getcontentkind() == motorfile::source) {
 			    for(icfile = icfold->begin(); !found && icfile != icfold->end(); icfile++) {
-			        if(found = (justfname(icfile->getfname()) == fname))
+				if(found = (justfname(icfile->getfname()) == fname))
 				    fname = pf.transformfname(projectpaths::absolute,
-				        icfile->getfname());
+					icfile->getfname());
 			    }
 			}
 		    }
@@ -223,7 +223,7 @@ void ncursesui::loadeditfile(const motorui::editfile ef, INT options) {
 	} else {
 	    f.open(fname.c_str());
 	    if(f.is_open()) {
-	        ed.load(f, fname);
+		ed.load(f, fname);
 		ed.markbreakpoints();
 		f.close();
 	    }
@@ -231,7 +231,7 @@ void ncursesui::loadeditfile(const motorui::editfile ef, INT options) {
     }
 
     if(ef.x != -1 && ef.y != -1)
-        ed.setpos(ef.x, ef.y-1);
+	ed.setpos(ef.x, ef.y-1);
 
     statusupdate();
 }
@@ -339,16 +339,16 @@ const projectname ncursesui::selectproject(mgrmode amode, vector<string> templs)
 
     if(amode == selectorcreate) {
 	db.setbar(new horizontalbar(getcolor(cp_menu), getcolor(cp_menusel),
-    	    _("Create/Import.."), _("Add"), _("Remove"), _("Open"), NULL_CONST_STR));
+	    _("Create/Import.."), _("Add"), _("Remove"), _("Open"), NULL_CONST_STR));
 
 	db.addkey(KEY_IC, 1);
 	db.addkey(KEY_DC, 2);
 
-        db.getbar()->item = 3;
+	db.getbar()->item = 3;
 
 	db.setwindow(new textwindow(0, 0, (INT) (DIALOG_WIDTH*0.8),
-    	    DIALOG_HEIGHT, getcolor(cp_menufr), TW_CENTERED,
-    	    getcolor(cp_menuhl), _(" Projects registry ")));
+	    DIALOG_HEIGHT, getcolor(cp_menufr), TW_CENTERED,
+	    getcolor(cp_menuhl), _(" Projects registry ")));
 
     } else {
 	db.setwindow(new textwindow(0, 0, DIALOG_WIDTH, DIALOG_HEIGHT,
@@ -363,7 +363,7 @@ const projectname ncursesui::selectproject(mgrmode amode, vector<string> templs)
 
     while(pname.empty()) {
 	if(tree.empty()) {
-    	    tree.clear();
+	    tree.clear();
 	    tnodes.clear();
 	    pnames = manager.getprojectlist();
 
@@ -372,8 +372,8 @@ const projectname ncursesui::selectproject(mgrmode amode, vector<string> templs)
 		if(itnode->first == i->gettemplatename()) break;
 
 		if(!templs.empty())
-            	    if(find(templs.begin(), templs.end(), i->gettemplatename()) == templs.end())
-                	continue;
+		    if(find(templs.begin(), templs.end(), i->gettemplatename()) == templs.end())
+			continue;
 
 		if(itnode == tnodes.end()) {
 		    j = tree.addnode(0, getcolor(cp_menuhl), NULL, " " + i->gettemplatename() + " ");
@@ -384,23 +384,23 @@ const projectname ncursesui::selectproject(mgrmode amode, vector<string> templs)
 		cid = tree.addleaf(itnode->second, 0,
 		    i-pnames.begin()+1, " " + i->getname() + " ");
 
-                if(iterfirst)
+		if(iterfirst)
 		if((project.empty() && (i->getname() == uiconf.getlastproject()))
 		|| (i->getname() == project.getname())) {
-            	    lpid = cid;
+		    lpid = cid;
 		}
 	    }
 
-            if(iterfirst) tree.setcur(lpid);
+	    if(iterfirst) tree.setcur(lpid);
 	}
 
 /*        if(tree.empty() && (amode == selectorcreate)) {
-            if(iterfirst) baritem = 0; else break;
-        } else {*/
-            if(!db.open(menuitem, baritem, (void **) &j)) break;
+	    if(iterfirst) baritem = 0; else break;
+	} else {*/
+	    if(!db.open(menuitem, baritem, (void **) &j)) break;
 //        }
 
-        iterfirst = false;
+	iterfirst = false;
 
 	if((amode == selectonly) && j) {
 	    pname = pnames[j-1];
@@ -408,9 +408,9 @@ const projectname ncursesui::selectproject(mgrmode amode, vector<string> templs)
 	switch(baritem) {
 	    case 0:
 		if(createproject()) {
-                    pname = static_cast<projectname> (project);
+		    pname = static_cast<projectname> (project);
 		}
-	        break;
+		break;
 	    case 1:
 		if(regproject())
 		    tree.clear();
@@ -422,15 +422,15 @@ const projectname ncursesui::selectproject(mgrmode amode, vector<string> templs)
 		    if(!mp.empty()) {
 			mp.remove();
 			tree.clear();
-                        iterfirst = pnames.size() == 1;
+			iterfirst = pnames.size() == 1;
 		    }
 		}
-	        break;
+		break;
 	    case 3:
 		if(j) {
 		    pname = pnames[j-1];
 		}
-	        break;
+		break;
 	}
     }
 
@@ -466,21 +466,21 @@ string ncursesui::selecttemplate(const string &def, const string &title) const {
 	}
 
 	id = db.gettree()->addleaf(nnode, 0, it-tlist.begin()+1, " " + lw + " ");
-        if(*it == def) cpid = id;
+	if(*it == def) cpid = id;
     }
 
     db.gettree()->setcur(cpid);
 
     while(1) {
-        if(db.open(n, b, (void **) &citem)) {
-            if(citem) {
-                ret = tlist[citem-1];
-                break;
-            }
-        } else {
-            ret = def;
-            break;
-        }
+	if(db.open(n, b, (void **) &citem)) {
+	    if(citem) {
+		ret = tlist[citem-1];
+		break;
+	    }
+	} else {
+	    ret = def;
+	    break;
+	}
     }
 
     db.close();
@@ -490,7 +490,7 @@ string ncursesui::selecttemplate(const string &def, const string &title) const {
 
 void ncursesui::mainloop() {
     while(!terminate) {
-        workareaupdate();
+	workareaupdate();
 
 	if(ed.getfcount()) {
 	    ed.open();
@@ -608,64 +608,64 @@ void ncursesui::execmenubar() {
 
     if(menubar.open(&h, &p))
     switch(h) {
-        case 1:
+	case 1:
 	    switch(p) {
-    	        case 1: hotkey(CTRL('o')); break;
-    		case 2: ed.fsave(uieditor::savecurrent); break;
+		case 1: hotkey(CTRL('o')); break;
+		case 2: ed.fsave(uieditor::savecurrent); break;
 		case 3: ed.fsave(uieditor::saveas); break;
 		case 4: ed.fsave(uieditor::saveall); break;
-    		case 5: ed.closecurrentfile(); break;
-    		case 6: generate(); break;
-        	case 8: settings(); break;
-                case 9: extkeylist(); break;
+		case 5: ed.closecurrentfile(); break;
+		case 6: generate(); break;
+		case 8: settings(); break;
+		case 9: extkeylist(); break;
 		case 10: regexper.exec(); break;
 		case 12: terminate = true; break;
-    	    }
-    	    break;
-        case 2:
+	    }
+	    break;
+	case 2:
 	    switch(p) {
-    	        case  1: ed.switchmark(); break;
+		case  1: ed.switchmark(); break;
 		case  2: ed.clipboard(uieditor::cut); break;
-	        case  3: ed.clipboard(uieditor::copy); break;
+		case  3: ed.clipboard(uieditor::copy); break;
 		case  4: ed.clipboard(uieditor::paste); break;
-    	        case  6: ed.insertmode = !ed.insertmode; break;
-        	case  8: hotkey(CTRL('f')); break;
-    	        case  9: hotkey(CTRL('g')); break;
+		case  6: ed.insertmode = !ed.insertmode; break;
+		case  8: hotkey(CTRL('f')); break;
+		case  9: hotkey(CTRL('g')); break;
 		case 10: hotkey(CTRL('r')); break;
-    	        case 11:
+		case 11:
 		    ed.gotoline();
 		    break;
-    	        case 13:
+		case 13:
 		    ed.shiftident(-1);
 		    ed.redraw();
 		    break;
-    	        case 14:
+		case 14:
 		    ed.shiftident(+1);
 		    ed.redraw();
 		    break;
-	        case 16:
+		case 16:
 		    ed.undo();
 		    break;
-            }
-            break;
-        case 3:
+	    }
+	    break;
+	case 3:
 	    switch(p) {
-	        case  1:
-                    pload();
+		case  1:
+		    pload();
 		    break;
-	        case  3:
+		case  3:
 		    projectedit(pfiles);
 		    break;
-    		case  4:
+		case  4:
 		    projectedit(pdirs);
 		    break;
-	        case  5:
+		case  5:
 		    projectedit(psettings);
 		    break;
-	        case  7:
-                    hotkey(KEY_F(9));
+		case  7:
+		    hotkey(KEY_F(9));
 		    break;
-	        case  8:
+		case  8:
 		    project.clean();
 		    break;
 		case  9:
@@ -674,20 +674,20 @@ void ncursesui::execmenubar() {
 		case 10:
 		    project.regenerate();
 		    break;
-	        case 11:
+		case 11:
 		    dist();
 		    break;
-	        case 13:
+		case 13:
 		    uitb.exec();
 		    break;
-                case 14:
+		case 14:
 		    showoutput();
 		    break;
-    	    }
-            break;
-        case 4:
+	    }
+	    break;
+	case 4:
 	    switch(p) {
-	        case 1:
+		case 1:
 		    uv.check();
 		    break;
 		case 2:
@@ -707,61 +707,61 @@ void ncursesui::execmenubar() {
 		    break;
 	    }
 	    break;
-        case 5:
+	case 5:
 	    switch(p) {
-                case  1:
+		case  1:
 		    if(debugger.running()) {
 			debugger.cont();
 		    } else {
 			debugger.run();
 		    }
 		    break;
-                case  2:
+		case  2:
 		    loadcore();
 		    break;
-	        case  3:
+		case  3:
 		    arguments();
 		    break;
-	        case  4:
+		case  4:
 		    debugger.kill();
 		    break;
-                case  5:
+		case  5:
 		    hotkey(ALT('s'));
 		    break;
-	        case  7:
+		case  7:
 		    hotkey(CTRL('b'));
 		    break;
-	        case  8:
+		case  8:
 		    hotkey(ALT('b'));
 		    break;
-	        case 10:
+		case 10:
 		    hotkey(CTRL('w'));
 		    break;
-	        case 11:
+		case 11:
 		    hotkey(ALT('w'));
 		    break;
-                case 12:
+		case 12:
 		    evaluate("");
 		    break;
-                case 14:
+		case 14:
 		    debugger.step();
 		    break;
-	        case 15:
+		case 15:
 		    debugger.next();
 		    break;
-                case 16:
+		case 16:
 		    hotkey(KEY_F(4));
 		    break;
-            }
-            break;
-        case 6:
-            switch(p) {
-	        case 1: ed.switchwindow(+1); break;
-	        case 2: ed.switchwindow(-1); break;
+	    }
+	    break;
+	case 6:
+	    switch(p) {
+		case 1: ed.switchwindow(+1); break;
+		case 2: ed.switchwindow(-1); break;
 		case 4: ed.windowlist(); break;
 		case 5: hotkey(KEY_F(6)); break;
 	    }
-            break;
+	    break;
     }
 }
 
@@ -818,50 +818,50 @@ bool ncursesui::hotkey(INT k) {
     bool r = true;
 
     switch(k) {
-        case KEY_F( 1):
+	case KEY_F( 1):
 	    help();
 	    break;
 
 	case KEY_F( 4):
 	    if(ed.getfid()) {
-                ed.getpos(0, &line);
+		ed.getpos(0, &line);
 		debugger.tocursor(ed.getfid(), line+1);
 	    }
 	    break;
 
-        case KEY_F( 5):
+	case KEY_F( 5):
 	    ed.windowlist();
 	    break;
 
-        case KEY_F( 6):
+	case KEY_F( 6):
 	    showmessages();
 	    break;
 
-        case KEY_F( 7):
-            debugger.step();
+	case KEY_F( 7):
+	    debugger.step();
 	    break;
 
-        case KEY_F( 8):
-            debugger.next();
+	case KEY_F( 8):
+	    debugger.next();
 	    break;
 
-        case KEY_F( 9):
-            project.build();
+	case KEY_F( 9):
+	    project.build();
 	    if(executor.begin() != executor.end()) showmessages();
 	    break;
 
-        case KEY_F(19):
+	case KEY_F(19):
 	    project.clean();
 	    break;
 
-        case KEY_F(11):
-            if(modifiers & SHIFT_PRESSED) projectedit(psettings); else
-            if(modifiers & CONTROL_PRESSED) projectedit(pdirs, true); else
-        	projectedit(pfiles);
-            break;
+	case KEY_F(11):
+	    if(modifiers & SHIFT_PRESSED) projectedit(psettings); else
+	    if(modifiers & CONTROL_PRESSED) projectedit(pdirs, true); else
+		projectedit(pfiles);
+	    break;
 
-        case KEY_F(12):
-            if(modifiers & SHIFT_PRESSED) {
+	case KEY_F(12):
+	    if(modifiers & SHIFT_PRESSED) {
 		arguments();
 	    } else if(modifiers & CONTROL_PRESSED) {
 		debugger.kill();
@@ -872,27 +872,27 @@ bool ncursesui::hotkey(INT k) {
 		    debugger.run();
 		}
 	    }
-            break;
+	    break;
 
-        case CTRL('e'):
+	case CTRL('e'):
 	    nextmessage();
 	    break;
 
-        case CTRL('n'):
+	case CTRL('n'):
 	    ed.switchwindow(+1);
 	    break;
 
-        case CTRL('p'):
+	case CTRL('p'):
 	    ed.switchwindow(-1);
 	    break;
 
-        case CTRL('o'):
+	case CTRL('o'):
 	    ed.loadfile();
 	    break;
 
-        case CTRL('b'):
+	case CTRL('b'):
 	    if(ed.getfid()) {
-                ed.getpos(0, &line);
+		ed.getpos(0, &line);
 		breakpoint bp(ed.getfid(), line+1);
 
 		if(debugger.isbreakpoint(bp)) {
@@ -905,51 +905,51 @@ bool ncursesui::hotkey(INT k) {
 	    }
 	    break;
 
-        case CTRL('w'):
+	case CTRL('w'):
 	    watcher.add();
 	    break;
 
-        case CTRL('f'):
+	case CTRL('f'):
 	    uigrep.grep();
 	    break;
 
-        case CTRL('r'):
+	case CTRL('r'):
 	    uigrep.replace();
 	    break;
 
-        case CTRL('g'):
+	case CTRL('g'):
 	    uigrep.again();
 	    break;
 
-        case ALT('b'):
+	case ALT('b'):
 	    showbreakpoints();
 	    break;
 
-        case ALT('w'):
+	case ALT('w'):
 	    watcher.exec();
 	    break;
 
-        case ALT('e'):
+	case ALT('e'):
 	    evaluate("");
 	    break;
 
-        case ALT('?'):
+	case ALT('?'):
 	    uitb.exec();
 	    break;
 
-        case ALT('s'):
+	case ALT('s'):
 	    showstack();
 	    break;
 
-        case ALT('r'):
+	case ALT('r'):
 	    regexper.exec();
 	    break;
 
-        case ALT('t'):
+	case ALT('t'):
 	    maketarget();
 	    break;
 
-        case CTRL('x'):
+	case CTRL('x'):
 	    terminate = true;
 	    break;
 
@@ -985,7 +985,7 @@ void ncursesui::textbox(const string &text, const string &title) {
     dialogbox db;
 
     db.setwindow(new textwindow(0, 0, DIALOG_WIDTH, DIALOG_HEIGHT,
-        getcolor(cp_menufr), TW_CENTERED));
+	getcolor(cp_menufr), TW_CENTERED));
 
     db.setbrowser(new textbrowser(getcolor(cp_menu)));
 
@@ -1001,9 +1001,9 @@ void ncursesui::textbox(const string &text, const string &title) {
 
 INT ncursesui::texteditboxkeys(texteditor &ed, INT k) {
     switch(k) {
-        case CTRL('x'):
+	case CTRL('x'):
 	    thisui.texteditok = true;
-        case 27:
+	case 27:
 	    return -1;
     }
 
@@ -1036,7 +1036,7 @@ bool ncursesui::texteditbox(const string &title, string &text) {
 
     if(texteditok) {
 	text = sp = ed.save("\r\n");
-        delete sp;
+	delete sp;
     }
 
     w.close();
@@ -1098,14 +1098,14 @@ vector<motorui::editfile> ncursesui::geteditfiles() {
 
     saven = ed.getfnum();
     for(i = 0; i < ed.getfcount(); i++) {
-        ed.setfnum(i);
-        ed.getpos(&x, &y);
+	ed.setfnum(i);
+	ed.getpos(&x, &y);
 	v.push_back(motorui::editfile(ed.getfid(i), x, y+1));
     }
 
     if(ed.getfcount() > 1) {
-        v.push_back(v[saven]);
-        v.erase(v.begin()+saven);
+	v.push_back(v[saven]);
+	v.erase(v.begin()+saven);
     }
 
     ed.setfnum(saven);
@@ -1121,7 +1121,7 @@ vector<string> ncursesui::geteditfile(const string &fname) {
     for(i = 0; i < ed.getfcount(); i++) {
 	if(samefile(fname, ed.getfid(i))) {
 	    saven = ed.getfnum();
-    	    ed.setfnum(i);
+	    ed.setfnum(i);
 	    buf = ed.save("\n");
 	    ed.setfnum(saven);
 	    break;
@@ -1129,7 +1129,7 @@ vector<string> ncursesui::geteditfile(const string &fname) {
     }
 
     if(!buf.empty())
-        breakintolines(buf, r);
+	breakintolines(buf, r);
 
     return r;
 }
@@ -1144,8 +1144,8 @@ string ncursesui::inputskel(const string &initval, const string &text, bool selm
     kwriteatf(0, line, getcolor(cp_input), "%s", text.c_str());
 
     if(selmode) {
-        mright -= 8;
-        kwriteatf(COLS-8, line, getcolor(cp_input), "[Ctrl-T]");
+	mright -= 8;
+	kwriteatf(COLS-8, line, getcolor(cp_input), "[Ctrl-T]");
 	inp.connectselector(selector);
     } else {
 	inp.removeselector();
@@ -1241,30 +1241,30 @@ bool ncursesui::projectsettings() {
     nfiles = ed.getfcount();
     for(bool fin = false; nfiles == ed.getfcount() && !fin; ) {
 	populatesettingstree(*db.gettree());
-        if(fin = !db.open(n, b, &p)) break;
+	if(fin = !db.open(n, b, &p)) break;
 
-        switch((INT) p) {
-            case 10:
+	switch((INT) p) {
+	    case 10:
 		if(input(motorui::text, buf = project.getversion(),
 		_("version: ")) == motorui::yes) {
 		    project.setversion(buf);
 		}
 		break;
 
-            case 11:
+	    case 11:
 		if(changetemplate())
 		    rc = true;
 		break;
 
-            case 12:
+	    case 12:
 		log(_("Cannot modify the root directory. Please move the files manually"));
-                break;
+		break;
 
-            case 13:
+	    case 13:
 		project.setgettextized(!project.isgettextized());
 		break;
 
-            case 14:
+	    case 14:
 		if(vcs.enabled()) {
 		    if(ask("NY", _("Do you want to disable version control for the project?")) == motorui::yes) {
 			project.setvcsmodule("");
@@ -1275,36 +1275,43 @@ bool ncursesui::projectsettings() {
 		}
 		break;
 
-            case 16:
-		project.setmakemode(
-		    project.getmakemode() == motorproject::automake ?
-			motorproject::manual :
-			motorproject::automake);
-                break;
+	    case 16:
+		switch(project.getmakemode()) {
+		    case motorproject::automake:
+			project.setmakemode(motorproject::manual);
+			break;
+		    case motorproject::manual:
+			project.setmakemode(motorproject::cmake);
+			break;
+		    case motorproject::cmake:
+			project.setmakemode(motorproject::automake);
+			break;
+		}
+		break;
 
-            case 17:
+	    case 17:
 		if(input(motorui::text, cflags, _("additional compiler command line options: "))
 		!= motorui::cancel) {
 		    project.setflags(cflags, lflags);
 		}
 		break;
 
-            case 18:
+	    case 18:
 		if(input(motorui::text, lflags, _("additional linker command line options: "))
 		!= motorui::cancel) {
 		    project.setflags(cflags, lflags);
 		}
 		break;
 
-            case 30:
+	    case 30:
 		if(projectcontents(pfiles, false))
 		    rc = true;
 		break;
-            case 31:
+	    case 31:
 		if(projectcontents(pdirs, false))
 		    rc = true;
 		break;
-        }
+	}
     }
 
     db.close();
@@ -1382,7 +1389,7 @@ void ncursesui::populatecontentstree(treeview &tree, motorproject &mp, projedita
     if((pea == pfiles && ifold->getcontentkind() != motorfile::directory)
     || (pea == pdirs && ifold->getcontentkind() == motorfile::directory)) {
 
-        treeshit.push_back(shitpair(0, &(*ifold)));
+	treeshit.push_back(shitpair(0, &(*ifold)));
 	foldid = tree.addnode(0, getcolor(cp_menuhl), treeshit.size(), " " + ifold->getname() + " ");
 
 	if(find(cnodes.begin(), cnodes.end(), ifold->gettagname()) != cnodes.end()) {
@@ -1392,13 +1399,13 @@ void ncursesui::populatecontentstree(treeview &tree, motorproject &mp, projedita
 	}
 
 	for(ifile = ifold->begin(); ifile != ifold->end(); ifile++) {
-            treeshit.push_back(shitpair(&(*ifile), &(*ifold)));
+	    treeshit.push_back(shitpair(&(*ifile), &(*ifold)));
 	    id = tree.addleaf(foldid, 0, treeshit.size(), " " + ifile->getfname() + " ");
 
-            if(setcurrent)
-            if(ifold->getcontentkind() == motorfile::source)
-            if(ifile->getfname() == mp.transformfname(motorproject::relative, ed.getfid()))
-                cfid = id;
+	    if(setcurrent)
+	    if(ifold->getcontentkind() == motorfile::source)
+	    if(ifile->getfname() == mp.transformfname(motorproject::relative, ed.getfid()))
+		cfid = id;
 	}
     }
 
@@ -1421,13 +1428,13 @@ bool ncursesui::projectcontents(projeditaction pea, bool setcurrent) {
     switch(pea) {
 	case pfiles:
 	    head = _(" Project files ");
-    	    db.setbar(new horizontalbar(getcolor(cp_menu),
+	    db.setbar(new horizontalbar(getcolor(cp_menu),
 		getcolor(cp_menusel), _("Add"), _("Remove"), _("Edit"), NULL_CONST_STR));
-    	    db.getbar()->item = 2;
+	    db.getbar()->item = 2;
 	    break;
 	case pdirs:
 	    head = _(" Project directories ");
-    	    db.setbar(new horizontalbar(getcolor(cp_menu),
+	    db.setbar(new horizontalbar(getcolor(cp_menu),
 		getcolor(cp_menusel), _("Add"), _("Remove"), NULL_CONST_STR));
 	    break;
     }
@@ -1445,22 +1452,22 @@ bool ncursesui::projectcontents(projeditaction pea, bool setcurrent) {
     db.addkey(KEY_DC, 1);
 
     for(bool fin = false; !fin; ) {
-        if(tree.empty() || tregen) {
-            populatecontentstree(tree, project, pea, setcurrent && ed.getfid() && fpass);
-            tregen = false;
+	if(tree.empty() || tregen) {
+	    populatecontentstree(tree, project, pea, setcurrent && ed.getfid() && fpass);
+	    tregen = false;
 
 	    if(tree.empty()) {
 		log(_("No folders of this kind are defined in the template"));
 		rc = false;
 		break;
 	    }
-        }
+	}
 
-        if(fin = !db.open(n, b, (void **) &citem)) break;
+	if(fin = !db.open(n, b, (void **) &citem)) break;
 
 	fpass = false;
-        file = treeshit[citem-1].first;
-        fold = treeshit[citem-1].second;
+	file = treeshit[citem-1].first;
+	fold = treeshit[citem-1].second;
 
 	switch(b) {
 	    case 0:
@@ -1481,7 +1488,7 @@ bool ncursesui::projectcontents(projeditaction pea, bool setcurrent) {
 			pname = selectproject(selectonly, fold->gettempltotakefrom());
 			if(!pname.empty()) {
 			    buf = pname.getname();
-                            ar = motorui::yes;
+			    ar = motorui::yes;
 			}
 			break;
 		}
@@ -1492,7 +1499,7 @@ bool ncursesui::projectcontents(projeditaction pea, bool setcurrent) {
 			if(!fname.empty()) {
 			    fname = project.transformfname(projectpaths::relative, fname);
 
-    			    if(find(fold->begin(), fold->end(), fname) == fold->end()) {
+			    if(find(fold->begin(), fold->end(), fname) == fold->end()) {
 				if(fold->addfile(motorfile(fname), AF_VCS | AF_CHECKDIR | AF_TAKE)) {
 				    tregen = rc = true;
 				} else {
@@ -1507,7 +1514,7 @@ bool ncursesui::projectcontents(projeditaction pea, bool setcurrent) {
 		}
 		break;
 	    case 1:
-                if(fold && file) {
+		if(fold && file) {
 		    fold->removefile(*file);
 		    tregen = rc = true;
 		    db.redraw();
@@ -1519,13 +1526,13 @@ bool ncursesui::projectcontents(projeditaction pea, bool setcurrent) {
 		    case motorfile::source:
 			ui.loadeditfile(editfile(file->getfname(), -1, 0),
 			    LF_CREATE_IF_NOTFOUND);
-                        fin = true;
+			fin = true;
 			break;
 
 		    case motorfile::symbol:
 			break;
 
-                    case motorfile::project:
+		    case motorfile::project:
 			m = verticalmenu(getcolor(cp_menufr), getcolor(cp_menusel));
 			m.setwindow(
 			    textwindow(db.getwindow()->x2-17,
@@ -1566,12 +1573,12 @@ bool ncursesui::projectcontents(projeditaction pea, bool setcurrent) {
 		    id = tree.getid((void *) citem);
 
 		    if(tree.isnodeopen(id)) {
-                        tree.closenode(id);
-                    } else {
-                        tree.opennode(id);
-                    }
+			tree.closenode(id);
+		    } else {
+			tree.opennode(id);
+		    }
 
-                    tree.redraw();
+		    tree.redraw();
 		}
 
 		break;
@@ -1607,8 +1614,8 @@ string ncursesui::selectprojectfile(motorproject mp) {
 
 	while(1) {
 	    success = db.open(n, b, (void **) &citem);
-    	    file = treeshit[citem-1].first;
-    	    fold = treeshit[citem-1].second;
+	    file = treeshit[citem-1].first;
+	    fold = treeshit[citem-1].second;
 	    if(!success || file) break;
 	}
 
@@ -1657,13 +1664,13 @@ void ncursesui::writeoutput(const string &text) {
 	il = ln == 1 ? outlines.end()-LOOKER_HEIGHT+1 : outlines.begin();
 
 	for(; il != outlines.end(); il++, ln++) {
-    	    mvhline(ln, 0, ' ', COLS);
+	    mvhline(ln, 0, ' ', COLS);
 
 	    if(il->substr(0, 1) == "\001") {
-        	kwriteat(0, ln, il->c_str()+1, boldcolor(0));
-    	    } else {
-        	kwriteat(0, ln, il->c_str(), normalcolor(0));
-    	    }
+		kwriteat(0, ln, il->c_str()+1, boldcolor(0));
+	    } else {
+		kwriteat(0, ln, il->c_str(), normalcolor(0));
+	    }
 	}
 
 	mvhline(ln, 0, ' ', COLS);
@@ -1684,11 +1691,11 @@ void ncursesui::showoutput() {
     string text;
 
     if(outlines.size() < LOOKER_HEIGHT)
-        text.assign(LOOKER_HEIGHT-outlines.size()+1, '\n');
+	text.assign(LOOKER_HEIGHT-outlines.size()+1, '\n');
 
     for(i = outlines.begin(); i != outlines.end(); i++) {
-        if(!text.empty()) text += "\n";
-        text += *i;
+	if(!text.empty()) text += "\n";
+	text += *i;
 //        text += (i->substr(0, 1) == "\001" ? i->substr(1) : *i);
     }
 
@@ -1731,7 +1738,7 @@ void ncursesui::showmessages() {
 	rm = verticalmenu(getcolor(cp_menufr), getcolor(cp_menusel));
 
 	for(i = executor.begin(); i != executor.end(); i++) {
-    	    if(!i->fname.empty()) rm.additem(" " + justfname(i->fname) + ":" + i->description + " ");
+	    if(!i->fname.empty()) rm.additem(" " + justfname(i->fname) + ":" + i->description + " ");
 	    else rm.additem(" " + i->description);
 	    if(i == currentmsg) {
 		rm.setpos(i-executor.begin());
@@ -1743,11 +1750,11 @@ void ncursesui::showmessages() {
 	if((h = rm.getcount()) > LINES-3) h = LINES-3;
 	rm.setwindow(textwindow(0, LINES-3-h, COLS-1, LINES-2, getcolor(cp_menufr)));
 
-        if(start = (pos = rm.open())) {
+	if(start = (pos = rm.open())) {
 	    currentmsg = executor.begin()+pos-1;
 	}
 
-        rm.close();
+	rm.close();
 
 	if(start) {
 	    pointmessage();
@@ -1788,106 +1795,108 @@ bool ncursesui::createproject() {
     ivcs = vcses.begin();
 
     db.setwindow(new textwindow(0, 0, DIALOG_WIDTH, DIALOG_HEIGHT,
-        getcolor(cp_menufr), TW_CENTERED, getcolor(cp_menuhl),
-        _(" Create a new project ")));
+	getcolor(cp_menufr), TW_CENTERED, getcolor(cp_menuhl),
+	_(" Create a new project ")));
 
     db.setbar(new horizontalbar(getcolor(cp_menu), getcolor(cp_menusel),
 	_("Change"), _("Create"), NULL_CONST_STR));
 
     db.settree(new treeview(getcolor(cp_menu), getcolor(cp_menusel),
-        getcolor(cp_menu), getcolor(cp_menu)));
+	getcolor(cp_menu), getcolor(cp_menu)));
 
     treeview &tree = *db.gettree();
 
     for(bool fin = false; !fin; ) {
-        tree.clear();
+	tree.clear();
 
-        nproj = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Project "));
+	nproj = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Project "));
 
-        tree.addleaff(nproj, 0, 10, _(" Creation mode : %s "),
-            mode == cmscratch ? _("from scratch") :
-            mode == cmfiles ? _("from files") : _("from VCS"));
+	tree.addleaff(nproj, 0, 10, _(" Creation mode : %s "),
+	    mode == cmscratch ? _("from scratch") :
+	    mode == cmfiles ? _("from files") : _("from VCS"));
 
-        tree.addleaff(nproj, 0, 11, _(" Template : %s "), templname.empty() ? _("none") : templname.c_str());
-        tree.addleaff(nproj, 0, 12, _(" New project name : %s "), pname.c_str());
-        tree.addleaff(nproj, 0, 13, _(" Root directory : %s "), rootdir.c_str());
-        tree.addleaff(nproj, 0, 14, _(" Makefile mode : %s "), MAKEMODE_TO_STR(makemode));
-        tree.addleaff(nproj, 0, 15, _(" GNU standard documentation : %s "), BOOL_TO_STR(gnudoc));
-        tree.addleaff(nproj, 0, 19, _(" Use GNU gettext for internationalization : %s "), BOOL_TO_STR(gettextized));
+	tree.addleaff(nproj, 0, 11, _(" Template : %s "), templname.empty() ? _("none") : templname.c_str());
+	tree.addleaff(nproj, 0, 12, _(" New project name : %s "), pname.c_str());
+	tree.addleaff(nproj, 0, 13, _(" Root directory : %s "), rootdir.c_str());
+	tree.addleaff(nproj, 0, 14, _(" Makefile mode : %s "), MAKEMODE_TO_STR(makemode));
+	tree.addleaff(nproj, 0, 15, _(" GNU standard documentation : %s "), BOOL_TO_STR(gnudoc));
+	tree.addleaff(nproj, 0, 19, _(" Use GNU gettext for internationalization : %s "), BOOL_TO_STR(gettextized));
 
-        if(mode != cmfiles) {
-            nopt = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Creation "));
+	if(mode != cmfiles) {
+	    nopt = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Creation "));
 
 	    if(mode == cmscratch) {
-        	tree.addleaff(nopt, 0, 16, _(" Generate inital source: %s "), BOOL_TO_STR(gensource));
+		tree.addleaff(nopt, 0, 16, _(" Generate inital source: %s "), BOOL_TO_STR(gensource));
 	    } else if(mode == cmvcs) {
-                tree.addleaff(nopt, 0, 20, _(" VCS name : %s "), ivcs->c_str());
-                tree.addleaff(nopt, 0, 17, _(" Repository : %s "), vcsroot.c_str());
-                tree.addleaff(nopt, 0, 18, _(" Module name : %s "), vcsmodule.c_str());
-                tree.addleaff(nopt, 0, 21, _(" Revision : %s "), vcsrevision.c_str());
+		tree.addleaff(nopt, 0, 20, _(" VCS name : %s "), ivcs->c_str());
+		tree.addleaff(nopt, 0, 17, _(" Repository : %s "), vcsroot.c_str());
+		tree.addleaff(nopt, 0, 18, _(" Module name : %s "), vcsmodule.c_str());
+		tree.addleaff(nopt, 0, 21, _(" Revision : %s "), vcsrevision.c_str());
 	    }
-        }
+	}
 
-        if(!db.open(n, b, (void **) &citem)) {
-            ret = false;
-            fin = true;
-            continue;
-        }
+	if(!db.open(n, b, (void **) &citem)) {
+	    ret = false;
+	    fin = true;
+	    continue;
+	}
 
-        switch(b) {
-            case 0:
-                switch(citem) {
-                    case 10:
-                        mode = mode == cmscratch ? cmfiles :
-                    	    mode == cmfiles ? cmvcs :
-                    	    cmscratch;
+	switch(b) {
+	    case 0:
+		switch(citem) {
+		    case 10:
+			mode = mode == cmscratch ? cmfiles :
+			    mode == cmfiles ? cmvcs :
+			    cmscratch;
 
-                        if(mode == cmfiles)
-			    makemode = motorproject::manual;
+//                        if(mode == cmfiles)
+//                            makemode = motorproject::manual;
 
 			if((mode == cmvcs) && vcses.empty()) {
 			    log(_("No version control systems defined"));
 			    mode = cmscratch;
 			}
 
-                        break;
+			break;
 
-                    case 11:
-                        templname = selecttemplate(templname);
-                        break;
+		    case 11:
+			templname = selecttemplate(templname);
+			break;
 
-                    case 12:
-                        if(input(motorui::text, pname, _("project name: ")) == motorui::yes) {
-                            buf = rootdir.substr(0, conf.getdefaultprojectsdir().size());
-                            if(vcsmodule.empty()) vcsmodule = pname;
-                            if(rootdir.empty() || (buf == conf.getdefaultprojectsdir())) {
-                                rootdir = trailcut(conf.getdefaultprojectsdir(), "/") + "/" + pname;
-                            }
-                        }
-                        break;
+		    case 12:
+			if(input(motorui::text, pname, _("project name: ")) == motorui::yes) {
+			    buf = rootdir.substr(0, conf.getdefaultprojectsdir().size());
+			    if(vcsmodule.empty()) vcsmodule = pname;
+			    if(rootdir.empty() || (buf == conf.getdefaultprojectsdir())) {
+				rootdir = trailcut(conf.getdefaultprojectsdir(), "/") + "/" + pname;
+			    }
+			}
+			break;
 
-                    case 13:
+		    case 13:
 			input(motorui::directory, rootdir, _("root directory: "));
-                        if(pname.empty()) pname = justfname(rootdir);
-                        break;
+			if(pname.empty()) pname = justfname(rootdir);
+			break;
 
-                    case 14:
-                        makemode =
-                            makemode == motorproject::manual ?
-				motorproject::automake :
-                        	motorproject::manual;
-                        break;
+		    case 14:
+			if (makemode == motorproject::automake)
+			    makemode = motorproject::manual;
+			else if (makemode == motorproject::manual)
+			    makemode = motorproject::cmake;
+			else if (makemode == motorproject::cmake)
+			    makemode = motorproject::automake;
+			break;
 
-                    case 15: gnudoc = !gnudoc; break;
-                    case 16: gensource = !gensource; break;
+		    case 15: gnudoc = !gnudoc; break;
+		    case 16: gensource = !gensource; break;
 
-                    case 17:
+		    case 17:
 			input(motorui::text, vcsroot, _("VCS repository to check out from: "));
-                        break;
+			break;
 
-                    case 18:
+		    case 18:
 			input(motorui::text, vcsmodule, _("VCS module name: "));
-                        break;
+			break;
 
 		    case 19: gettextized = !gettextized; break;
 
@@ -1899,13 +1908,13 @@ bool ncursesui::createproject() {
 		    case 21:
 			input(motorui::text, vcsrevision, _("VCS revision: "));
 			break;
-                }
-                break;
+		}
+		break;
 
-            case 1:
+	    case 1:
 		ret = true;
 		break;
-        }
+	}
 
 	if(ret) {
 	    if(rootdir.empty()) {
@@ -1942,20 +1951,20 @@ bool ncursesui::createproject() {
 	    if(vcsroot.empty() || vcsmodule.empty()) {
 		log(_("VCS name, repository and module name must be specified"));
 		ret = false;
-            }
+	    }
 
 	    if(ret)
 	    if(mode != cmfiles)
 	    if(access(rootdir.c_str(), F_OK))
 	    if(ret = (ask("YNC", _("root directory you specified does not exist. create?")) == motorui::yes)) {
-        	mksubdirs(rootdir);
+		mksubdirs(rootdir);
 	    }
 
 	    if(ret)
 	    if(access(rootdir.c_str(), R_OK | W_OK | X_OK)) {
-                log(_("Access denied for the directory specified"));
+		log(_("Access denied for the directory specified"));
 		ret = false;
-            }
+	    }
 
 	    fin = ret;
 	}
@@ -1989,17 +1998,17 @@ bool ncursesui::createproject() {
 	}
 
 	if(!(ret = project.create(n))) {
-            if(!savename.empty()) {
-                project = motorproject(projectname(savename));
-	        onprojectload();
-            }
+	    if(!savename.empty()) {
+		project = motorproject(projectname(savename));
+		onprojectload();
+	    }
 	} else {
 	    vector<motordist>::const_iterator di;
 	    vector<motordist::distparam>::const_iterator pi;
 
 	    for(di = project.distbegin(); di != project.distend(); ++di)
 	    for(pi = di->parambegin(); pi != di->paramend(); ++pi)
-	        distparams[pi->name] = pi->defval;
+		distparams[pi->name] = pi->defval;
 	}
     }
 
@@ -2018,7 +2027,7 @@ void ncursesui::dist() {
     verticalmenu mdist(getcolor(cp_menu), getcolor(cp_menusel));
 
     if(project.distbegin() == project.distend()) {
-        logf(_("No distribution methods defined in template %s"),
+	logf(_("No distribution methods defined in template %s"),
 	    project.gettemplatename().c_str());
 	return;
     }
@@ -2038,50 +2047,50 @@ void ncursesui::dist() {
 	wdist->y1+2+mdist.getcount(), getcolor(cp_menufr)));
 
     db.settree(new treeview(getcolor(cp_menu), getcolor(cp_menusel),
-        getcolor(cp_menu), getcolor(cp_menu)));
+	getcolor(cp_menu), getcolor(cp_menu)));
 
     db.setbar(new horizontalbar(getcolor(cp_menu),
-        getcolor(cp_menusel), _("Change"), _("Go!"), NULL_CONST_STR));
+	getcolor(cp_menusel), _("Change"), _("Go!"), NULL_CONST_STR));
 
     di = project.distbegin();
     treeview &tree = *db.gettree();
 
     for(fin = r = false, first = true; !fin && !r; ) {
-        tree.clear();
+	tree.clear();
 
-        i = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Format "));
-        fid = tree.addleaf(i, 0, NULL, " " + di->getname() + " ");
+	i = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Format "));
+	fid = tree.addleaf(i, 0, NULL, " " + di->getname() + " ");
 
-        i = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Out directory "));
-        tree.addleaf(i, 0, NULL, " " + distdir + " ");
+	i = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Out directory "));
+	tree.addleaf(i, 0, NULL, " " + distdir + " ");
 
 	for(pi = di->parambegin(); pi != di->paramend(); ++pi) {
 	    if(pi == di->parambegin())
-	        i = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Parameters "));
+		i = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Parameters "));
 
 	    tree.addleaff(i, 0, NULL, " %s : %s ", pi->title.c_str(), distparams[pi->name].c_str());
 	}
 
-        if(first) {
-            tree.setcur(fid);
-            b = 0;
-            i = 2;
-            first = false;
-            db.redraw();
-        } else {
-            if(!db.open(i, b)) break;
-        }
+	if(first) {
+	    tree.setcur(fid);
+	    b = 0;
+	    i = 2;
+	    first = false;
+	    db.redraw();
+	} else {
+	    if(!db.open(i, b)) break;
+	}
 
 	if(!(r = (b == 1))) {
 	    if(i == 2) {
 		if(mdist.getcount() == 1) {
 		    di = project.distbegin();
 		} else {
-                    if(i = mdist.open()) {
-                        di = project.distbegin()+i-1;
-                    }
-                    mdist.close();
-                }
+		    if(i = mdist.open()) {
+			di = project.distbegin()+i-1;
+		    }
+		    mdist.close();
+		}
 	    } else if(i == 4) {
 		input(motorui::directory, distdir, _("directory to put a dist to: "));
 	    } else if(i > 5) {
@@ -2103,7 +2112,7 @@ void ncursesui::dist() {
 void ncursesui::executordone(const string &target, INT nerr, INT nwarn, INT ninfo) {
     if(nerr || nwarn || ninfo) {
 	logf(_("Finished ~%s~: ~%lu~ errors, ~%lu~ warnings, ~%lu~ infos. ~F6~ to see the list"),
-    	    target.c_str(), nerr, nwarn, ninfo);
+	    target.c_str(), nerr, nwarn, ninfo);
     } else {
 	logf(_("~%s~ finished sucessfully"), target.c_str());
     }
@@ -2157,9 +2166,9 @@ void ncursesui::maketarget() {
 		case 0:
 		    if(input(motorui::text, buf = "", _("make a target: ")) == motorui::yes) {
 			targets.push_back(buf);
-	    		i = targets.size();
+			i = targets.size();
 		    }
-    		case 2:
+		case 2:
 		    if(fin = !targets.empty()) {
 			tomake = targets[i-1];
 		    }
@@ -2186,26 +2195,26 @@ void ncursesui::setdebugcurrentline(const editfile ef) {
     vector<breakpoint>::iterator ibp;
 
     if((prevfname != ef.fname) || (prevline != ef.y)) {
-        ed.unlight(prevfn, prevline);
+	ed.unlight(prevfn, prevline);
 
-        if(ed.getfid(prevfn)) {
-            bps = debugger.getbreakpoints();
+	if(ed.getfid(prevfn)) {
+	    bps = debugger.getbreakpoints();
 
-            if((ibp = find(bps.begin(), bps.end(), pair<string, INT>(ed.getfid(prevfn), prevline))) != bps.end())
-                if(ibp->permanent())
-                    ed.highlight(prevfn, ibp->getline(), cp_debug_breakpoint);
-        }
+	    if((ibp = find(bps.begin(), bps.end(), pair<string, INT>(ed.getfid(prevfn), prevline))) != bps.end())
+		if(ibp->permanent())
+		    ed.highlight(prevfn, ibp->getline(), cp_debug_breakpoint);
+	}
 
-        if(!ef.fname.empty()) {
-            loadeditfile(ef);
-            ed.highlight(ed.getfnum(), ef.y, cp_debug_current);
-        }
+	if(!ef.fname.empty()) {
+	    loadeditfile(ef);
+	    ed.highlight(ed.getfnum(), ef.y, cp_debug_current);
+	}
 
-        prevfname = ef.fname;
-        prevfn = ed.getfnum();
-        prevline = ef.y;
+	prevfname = ef.fname;
+	prevfn = ed.getfnum();
+	prevline = ef.y;
 
-        ed.redraw();
+	ed.redraw();
     }
 }
 
@@ -2216,47 +2225,47 @@ void ncursesui::evaluate(const string &e) {
     static string re;
 
     db.setwindow(new textwindow(0, 0, DIALOG_WIDTH, (INT) (DIALOG_HEIGHT*0.45),
-        getcolor(cp_menufr), TW_CENTERED,
+	getcolor(cp_menufr), TW_CENTERED,
 	getcolor(cp_menuhl), _(" Evaluate/Modify ")));
 
     db.settree(new treeview(getcolor(cp_menu), getcolor(cp_menusel),
-        getcolor(cp_menu), getcolor(cp_menu)));
+	getcolor(cp_menu), getcolor(cp_menu)));
 
     db.setbar(new horizontalbar(getcolor(cp_menu),
-        getcolor(cp_menusel), _("Change"), NULL_CONST_STR));
+	getcolor(cp_menusel), _("Change"), NULL_CONST_STR));
 
     if(!e.empty()) re = e;
 
     treeview &tree = *db.gettree();
 
     for(bool fin = false; !fin; ) {
-        if(!re.empty()) {
-            val = debugger.getvar(re);
-        }
+	if(!re.empty()) {
+	    val = debugger.getvar(re);
+	}
 
-        tree.clear();
+	tree.clear();
 
-        i = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Expression "));
-        nexp = tree.addleaf(i, 0, NULL, " " + re + " ");
+	i = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Expression "));
+	nexp = tree.addleaf(i, 0, NULL, " " + re + " ");
 
-        i = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Value "));
-        tree.addleaf(i, 0, NULL, " " + (val.empty() ? _("not available") : val) + " ");
+	i = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Value "));
+	tree.addleaf(i, 0, NULL, " " + (val.empty() ? _("not available") : val) + " ");
 
-        if(re.empty()) {
-            i = 2;
-            tree.setcur(nexp);
-        } else {
-            if(!db.open(i, b)) break;
-        }
+	if(re.empty()) {
+	    i = 2;
+	    tree.setcur(nexp);
+	} else {
+	    if(!db.open(i, b)) break;
+	}
 
-        switch(i) {
-            case 2:
+	switch(i) {
+	    case 2:
 		fin = input(motorui::text, re, _("expression: ")) != motorui::yes;
-                break;
-            case 4:
+		break;
+	    case 4:
 		watcher.modify(re, val);
-                break;
-        }
+		break;
+	}
     }
 
     db.close();
@@ -2276,7 +2285,7 @@ void ncursesui::settings() {
 	getcolor(cp_menusel), _("Change"), _("Done"), NULL_CONST_STR));
 
     db.settree(new treeview(getcolor(cp_menu), getcolor(cp_menusel),
-        getcolor(cp_menu), getcolor(cp_menu)));
+	getcolor(cp_menu), getcolor(cp_menu)));
 
     treeview &tree = *db.gettree();
 
@@ -2297,8 +2306,8 @@ void ncursesui::settings() {
 	tree.addleaff(n, 0, 3, _(" show make output : %s "), BOOL_TO_STR(fdispmake));
 
 	n = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Debugger "));
-        tree.addleaff(n, 0, 5, _(" debug standard headers : %s "), BOOL_TO_STR(fdebugstd));
-        tree.addleaff(n, 0, 7, _(" disable free tty check : %s "), BOOL_TO_STR(!fchecktty));
+	tree.addleaff(n, 0, 5, _(" debug standard headers : %s "), BOOL_TO_STR(fdebugstd));
+	tree.addleaff(n, 0, 7, _(" disable free tty check : %s "), BOOL_TO_STR(!fchecktty));
 
 	n = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Editor "));
 	tree.addleaff(n, 0, 9, _(" enable \"smart tabs\" feature : %s "), BOOL_TO_STR(fsmarttab));
@@ -2406,14 +2415,14 @@ void ncursesui::showbreakpoints() {
     editfile ef;
 
     db.setwindow(new textwindow(0, 0, DIALOG_WIDTH, DIALOG_HEIGHT,
-        getcolor(cp_menufr), TW_CENTERED,
+	getcolor(cp_menufr), TW_CENTERED,
 	getcolor(cp_menuhl), _(" Breakpoints ")));
 
     db.settree(new treeview(getcolor(cp_menu), getcolor(cp_menusel),
-        getcolor(cp_menu), getcolor(cp_menu)));
+	getcolor(cp_menu), getcolor(cp_menu)));
 
     db.setbar(new horizontalbar(getcolor(cp_menu),
-        getcolor(cp_menusel), _("Remove"), _("Goto"), NULL_CONST_STR));
+	getcolor(cp_menusel), _("Remove"), _("Goto"), NULL_CONST_STR));
 
     db.addkey(KEY_DC, 0);
     db.getbar()->item = 1;
@@ -2421,7 +2430,7 @@ void ncursesui::showbreakpoints() {
     treeview &tree = *db.gettree();
 
     for(bool fin = false; !fin; ) {
-        tree.clear();
+	tree.clear();
 
 	if(ed.getfid()) {
 	    INT x, y;
@@ -2437,7 +2446,7 @@ void ncursesui::showbreakpoints() {
 		tree.setcur(i);
 	}
 
-        ef = editfile();
+	ef = editfile();
 	if(!db.open(n, b, (void **) &i)) break;
 
 	if(i)
@@ -2532,26 +2541,26 @@ void ncursesui::loadcore() {
 
     if(input(motorui::file, corefname = project.getrootdir() + "/core",
     _("Core dump to explore: ")) == motorui::yes) {
-        if(!(r = debugger.loadcore(corefname)).empty()) {
-            log();
+	if(!(r = debugger.loadcore(corefname)).empty()) {
+	    log();
 
-            db.setwindow(new textwindow(0, 0, DIALOG_WIDTH, DIALOG_HEIGHT,
-                getcolor(cp_menufr), TW_CENTERED, getcolor(cp_menuhl),
-	        _(" Core dump load results ")));
+	    db.setwindow(new textwindow(0, 0, DIALOG_WIDTH, DIALOG_HEIGHT,
+		getcolor(cp_menufr), TW_CENTERED, getcolor(cp_menuhl),
+		_(" Core dump load results ")));
 
-            db.setbar(new horizontalbar(getcolor(cp_menu),
-                getcolor(cp_menusel), _("Inspect stack"), _("Close"), NULL_CONST_STR));
+	    db.setbar(new horizontalbar(getcolor(cp_menu),
+		getcolor(cp_menusel), _("Inspect stack"), _("Close"), NULL_CONST_STR));
 
-            db.setbrowser(new textbrowser(getcolor(cp_menu)));
-            db.getbrowser()->setbuf(r);
+	    db.setbrowser(new textbrowser(getcolor(cp_menu)));
+	    db.getbrowser()->setbuf(r);
 
 	    for(bool fin = false; !fin; ) {
 		fin = !db.open(n, b) || b;
 		if(!fin) fin = showstack();
 	    }
 
-            db.close();
-        }
+	    db.close();
+	}
     }
 }
 
@@ -2568,11 +2577,11 @@ bool ncursesui::showstack() {
 
     if(!(stack = debugger.getstack()).empty()) {
 	db.setwindow(new textwindow(0, 0, DIALOG_WIDTH, DIALOG_HEIGHT,
-    	    getcolor(cp_menufr), TW_CENTERED,
-    	    getcolor(cp_menuhl), _(" Call stack ")));
+	    getcolor(cp_menufr), TW_CENTERED,
+	    getcolor(cp_menuhl), _(" Call stack ")));
 
 	db.setmenu(new verticalmenu(getcolor(cp_menu), getcolor(cp_menusel)));
-        db.setbar(new horizontalbar(getcolor(cp_menu), getcolor(cp_menusel),
+	db.setbar(new horizontalbar(getcolor(cp_menu), getcolor(cp_menusel),
 	    _("Info"), _("Go to"), NULL_CONST_STR));
 
 	db.getbar()->item = 1;
@@ -2582,37 +2591,37 @@ bool ncursesui::showstack() {
 	}
 
 	if(savecount != stack.size()) {
-    	    savecount = stack.size();
-    	    citem = 0;
+	    savecount = stack.size();
+	    citem = 0;
 	} else {
-    	    db.getmenu()->setpos(citem);
+	    db.getmenu()->setpos(citem);
 	}
 
 	for(bool fin = false; !fin; ) {
 	    if(!(fin = !db.open(n, b))) {
 		i = stack.begin()+n-1;
 
-    		switch(b) {
+		switch(b) {
 		    case 0:
-                        desc = _("Function:");
-                        desc += "\n  " + i->getname() + "\n\n";
-                        desc += _("Location:");
+			desc = _("Function:");
+			desc += "\n  " + i->getname() + "\n\n";
+			desc += _("Location:");
 
-                        desc += "\n  ";
-                        if(i->getlocation().fname.empty()) desc += "unknown";
-                        else desc += i->getlocation().fname + ":" + i2str(i->getlocation().y);
-                        desc += "\n\n";
+			desc += "\n  ";
+			if(i->getlocation().fname.empty()) desc += "unknown";
+			else desc += i->getlocation().fname + ":" + i2str(i->getlocation().y);
+			desc += "\n\n";
 
-                        desc += _("Arguments:");
-                        desc += "\n  " + i->getarguments();
+			desc += _("Arguments:");
+			desc += "\n  " + i->getarguments();
 
 			textbox(desc, _(" Stack item details "));
 			break;
-        	    case 1:
+		    case 1:
 			start = fin = true;
-                        citem = n-1;
+			citem = n-1;
 			break;
-    		}
+		}
 	    }
 	}
 
@@ -2714,15 +2723,15 @@ bool ncursesui::editbuildoptions(motorfile &f) const {
     motorfile::build bd = f.getbuild();
 
     db.setwindow(new textwindow(0, 0, (INT) (DIALOG_WIDTH*0.9), (INT) (DIALOG_HEIGHT*0.6),
-        getcolor(cp_menufr), TW_CENTERED,
+	getcolor(cp_menufr), TW_CENTERED,
 	getcolor(cp_menuhl), _(" %s build options "),
 	f.getfname().c_str()));
 
     db.settree(new treeview(getcolor(cp_menu), getcolor(cp_menusel),
-        getcolor(cp_menu), getcolor(cp_menu)));
+	getcolor(cp_menu), getcolor(cp_menu)));
 
     db.setbar(new horizontalbar(getcolor(cp_menu),
-        getcolor(cp_menusel), _("Change"), _("Done"), NULL_CONST_STR));
+	getcolor(cp_menusel), _("Change"), _("Done"), NULL_CONST_STR));
 
     treeview &tree = *db.gettree();
 
@@ -2730,10 +2739,10 @@ bool ncursesui::editbuildoptions(motorfile &f) const {
     enabled = !bd.param.empty();
 
     for(bool fin = false; !fin; ) {
-        tree.clear();
+	tree.clear();
 
-        i = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" General "));
-        tree.addleaff(i, 0, 1, _(" Enable optional build : %s "), BOOL_TO_STR(enabled));
+	i = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" General "));
+	tree.addleaff(i, 0, 1, _(" Enable optional build : %s "), BOOL_TO_STR(enabled));
 
 	if(enabled) {
 	    i = tree.addnode(0, getcolor(cp_menuhl), NULL, _(" Build "));

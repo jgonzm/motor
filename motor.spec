@@ -1,21 +1,19 @@
-Summary: Text mode based programming IDE for Linux
+Summary: A C++ program made in motor IDE
 Name: motor
-Version: 3.4.0
+Version: 0.1
 Release: 1
 Copyright: GPL
-Group: Development/Tools
-Source: http://konst.org.ua/download/%{name}-%{version}.tar.gz
-URL: http://konst.org.ua/motor/
-Packager: Konstantin Klyagin <konst@konst.org.ua>
+Group: Applications/File
+URL: http://thekonst.net/motor/
+Packager: jgm
+Source: %{name}-%{version}.tar.gz
 BuildRoot: /var/tmp/%{name}-buildroot/
 
 %description
 Motor is a text mode based programming environment for Linux. It
 consists of a powerful editor with syntax highlight feature, project
-manager, makefile generator, gcc and gdb front-end, etc. Deep CVS
-integration is also provided. It can also generate distribution packages 
-in any format. Almost everything is done using templates, thus any kind
-of language or distribution can be added easily.  
+manager, makefile generator, gdb front-end, etc. Deep CVS integration is
+also provided.
 
 %prep
 %setup
@@ -29,19 +27,17 @@ rm -rf $RPM_BUILD_ROOT
 make prefix=$RPM_BUILD_ROOT/usr sysconfdir=$RPM_BUILD_ROOT/etc install
 
 find $RPM_BUILD_ROOT/usr/ -type f -print | \
-    egrep -v '(README|COPYING|INSTALL|TODO|ChangeLog|FAQ)$|tutorial\/.*|share\/motor\/templates\/.*' | \
-    sed "s@^$RPM_BUILD_ROOT@@g" | sed 's/^\(.\+\/man.\+\)$/\1*/g' \
+    grep -v '\/(README|COPYING|INSTALL|TODO|ChangeLog)$' | \
+    sed "s@^$RPM_BUILD_ROOT@@g" | \
+    sed 's/^\(.\+\/man.\+\)$/\1*/g' \
     > %{name}-%{version}-filelist
 
-echo "/usr/share/motor/templates/*" \
-    >> %{name}-%{version}-filelist
-
 %clean
-rm -rf $RPM_BUILD_ROOT $RPM_BUILD_DIR/%{name}-%{version}
+rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}-%{version}-filelist
 %defattr(-, root, root)
 
-%doc README COPYING INSTALL TODO ChangeLog FAQ tutorial/*
+%doc README COPYING INSTALL ChangeLog
 
 %changelog

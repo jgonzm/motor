@@ -54,22 +54,22 @@ bool motorproject::load(const projectname aaname) {
 
     f.open(getregfname().c_str());
     if(ret = f.is_open()) {
-        while(getconf(sect, buf, f)) {
-             if(sect == "gettextized") gettextized = buf == "1";
+	while(getconf(sect, buf, f)) {
+	     if(sect == "gettextized") gettextized = buf == "1";
 	     else if(sect == "makemode") {
-                 makemode = buf == "automake" ?
-                     motorproject::automake :
-                     motorproject::manual;
-             } else if(sect == "vcsname") {
-	        vcs = motorvcs(vcsname = buf);
+		 makemode = buf == "automake" ?
+		     motorproject::automake :
+		     motorproject::manual;
+	     } else if(sect == "vcsname") {
+		vcs = motorvcs(vcsname = buf);
 	     } else if(sect == "cflags") {
-	        cflags = buf;
+		cflags = buf;
 	     } else if(sect == "lflags") {
-	        lflags = buf;
+		lflags = buf;
 	     }
-        }
+	}
 
-        f.close();
+	f.close();
     }
 
     if(!(options & LP_NOCHECK)) {
@@ -127,7 +127,7 @@ void motorproject::save() {
 	    "%lflags" << endl << lflags << endl;
 	f <<
 	    "%gettextized" << endl << (gettextized ? "1" : "0") << endl <<
-            "%makemode" << endl << MAKEMODE_TO_STR(makemode) << endl;
+	    "%makemode" << endl << MAKEMODE_TO_STR(makemode) << endl;
 
 	for(ifold = foldbegin(); ifold != foldend(); ifold++)
 	for(ifile = ifold->begin(); ifile != ifold->end(); ifile++) {
@@ -282,7 +282,7 @@ void motorproject::arrangebuildstuff() {
 
 	for(is = amake.begin(); is != amake.end(); is++) {
 	    if(find(emake.begin(), emake.end(), *is) == emake.end()) {
-	        addfile(*is, AF_VCS);
+		addfile(*is, AF_VCS);
 	    }
 	}
 
@@ -364,7 +364,7 @@ void motorproject::populateparselist(pparamslist *parselist) {
 
     for(ifold = foldbegin(); ifold != foldend(); ifold++)
 	if(ifold->getcontentkind() == motorfile::project) {
-    	    pl = pparamslist_add_list(ifold->gettagname().c_str(), parselist);
+	    pl = pparamslist_add_list(ifold->gettagname().c_str(), parselist);
 
 	    for(ifile = ifold->begin(); ifile != ifold->end(); ifile++) {
 		if(!(cp = motorproject(projectname(ifile->getfname()))).empty()) {
@@ -409,7 +409,7 @@ void motorproject::writemakefunc() {
 	    if(getname() == project.getname())
 		vcs.putmake(f, p);
 	pparamslist_free(p);
-        fclose(f);
+	fclose(f);
     }
 
     for(ifold = foldbegin(); ifold != foldend(); ifold++)
@@ -426,7 +426,7 @@ bool motorproject::create(INT options) {
     bool ret = true;
 
     if(getversion().empty()) {
-        setversion("0.1");
+	setversion("0.1");
     }
 
     ui.setdesktop(vector< pair<string, string> >());
@@ -435,7 +435,7 @@ bool motorproject::create(INT options) {
     if(!getvcs().empty() && !getvcsroot().empty() && !getvcsmodulename().empty()) {
 	vcs = motorvcs(getvcs());
 	vcs.checkout();
-        ret = vcs.good();
+	ret = vcs.good();
     }
 
     if(ret) {
@@ -469,8 +469,8 @@ void motorproject::checkautomake() {
 
     if(getmakemode() == automake)
     if(access("configure.in", F_OK)) {
-        i = find(sourcetemplates.begin(), sourcetemplates.end(), "configure.in");
-        if(i != sourcetemplates.end()) i->generate();
+	i = find(sourcetemplates.begin(), sourcetemplates.end(), "configure.in");
+	if(i != sourcetemplates.end()) i->generate();
     }
 }
 
@@ -538,8 +538,8 @@ bool motorproject::remove() {
 	if(ar == motorui::yes) {
 	    ::chdir(getenv("HOME"));
 	    if(!fork()) {
-	        execlp("/bin/rm", "/bin/rm", "-rf", getrootdir().c_str(), 0);
-    		_exit(0);
+		execlp("/bin/rm", "/bin/rm", "-rf", getrootdir().c_str(), 0);
+		_exit(0);
 	    }
 	}
 
@@ -609,10 +609,10 @@ char *motorproject::svmakefile(const char *value, const char *key) {
     string st;
 
     if(key) {
-        if(!strcmp(key, "extractfname")) {
+	if(!strcmp(key, "extractfname")) {
 	    st = justfname(value);
 	    ret = strdup(st.c_str());
-        }
+	}
     }
 
     return ret;

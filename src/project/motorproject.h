@@ -10,10 +10,10 @@
 #include "projectdebug.h"
 #include "motortagbrowser.h"
 
-#define	CR_GNU_DOC		2
-#define	CR_GENERATE_SOURCE	4
+#define CR_GNU_DOC              2
+#define CR_GENERATE_SOURCE      4
 
-#define	LP_NOCHECK		2
+#define LP_NOCHECK              2
 
 __MOTOR_BEGIN_NAMESPACE
 
@@ -28,7 +28,8 @@ class motorproject:
     public:
 	enum makemodekind {
 	    automake,
-	    manual
+	    manual,
+	    cmake
 	};
 
     protected:
