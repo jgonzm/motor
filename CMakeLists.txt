@@ -63,4 +63,5 @@ add_dependencies(build motor)
 target_link_libraries(motor -lintl -lncursesw)
 
 # make install => install in /usr/local/bin
+install(DIRECTORY deployment/ DESTINATION ${DATADIR}/motor)
 install(TARGETS motor DESTINATION bin)
