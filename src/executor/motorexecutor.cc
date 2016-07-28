@@ -70,7 +70,7 @@ bool motorexecutor::runmake(const string &atarget) {
 		chdir("build");
 		string makefile = "Makefile";
 		execl(findprogram(GNUMAKE).c_str(), GNUMAKE,
-		    "-f", makefile.c_str(),
+		    "-j4", "-f", makefile.c_str(),
 		    target.c_str(), 0);
 	    } else {
 		mkdir("build", S_IRWXU | S_IRWXG | S_IRWXO);
